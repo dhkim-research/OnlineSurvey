@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ETH Zürich • Live Comfort Logger</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="appHeader">
+    <div class="headerInner">
+      <div class="logoRow">
+        <img class="logo eth" src="../Assets/eth_logo.jpg" alt="ETH Zürich" />
+        <div class="titleBlock">
+          <div class="studyKicker">ETH Zürich • Solskin Study</div>
+          <div class="studyTitle">Live In-Session Comfort Logger</div>
+        </div>
+        <img class="logo solskin" src="../Assets/solskin_logo.png" alt="Solskin" />
+      </div>
+
+      <div class="barRow">
+        <div class="barMeta" id="meta"></div>
+        <div class="liveChip" id="liveChip" aria-label="Live status">NOT RUNNING</div>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section id="card" class="card" aria-live="polite"></section>
+
+    <footer class="nav">
+      <button id="btnStart" class="btn" type="button">Start session</button>
+      <div class="spacer"></div>
+      <button id="btnDownload" class="btn ghost" type="button">Download now</button>
+      <button id="btnEnd" class="btn" type="button">End & Download</button>
+    </footer>
+
+    <p class="hint">
+      Keep this tab open during the session. Every change is time-stamped. Nothing is uploaded.
+    </p>
+  </main>
+
+  <script src="live_app.js"></script>
+</body>
+</html>
