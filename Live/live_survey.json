@@ -1,0 +1,43 @@
+{
+  "surveyId": "in-session-live",
+  "title": "In-session Live Comfort Logger",
+  "version": "1.0.0",
+  "intro": "Keep this tab open during the session. Update whenever you notice a change.",
+  "fields": [
+    { "id": "participant_number", "type": "number", "label": "Participant Number", "min": 1, "step": 1, "required": true },
+    { "id": "session_number", "type": "number", "label": "Session Number", "min": 1, "step": 1, "required": true }
+  ],
+  "questions": [
+    {
+      "id": "thermal_sensation",
+      "type": "stateChoice",
+      "label": "Thermal conditions (right now)",
+      "help": "Select the option that best describes how you feel now. It stays selected until you change it.",
+      "options": ["Cold", "Cool", "Neutral", "Warm", "Hot"],
+      "default": "Neutral",
+      "required": true
+    },
+    {
+      "id": "glare_discomfort",
+      "type": "stateChoice",
+      "label": "Discomfort glare (right now)",
+      "help": "Select Yes/No. If Yes, also set the amount.",
+      "options": ["No", "Yes"],
+      "default": "No",
+      "required": true
+    },
+    {
+      "id": "glare_amount",
+      "type": "stateSlider",
+      "label": "Amount of glare discomfort",
+      "help": "Only active when glare is Yes.",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "default": 1,
+      "minLabel": "Very small amount",
+      "maxLabel": "Very large amount",
+      "enabledIf": { "questionId": "glare_discomfort", "equals": "Yes" }
+    }
+  ]
+}
