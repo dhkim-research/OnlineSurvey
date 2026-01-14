@@ -1,0 +1,364 @@
+{
+  "surveyId": "main-survey",
+  "title": "Main Survey",
+  "version": "1.1.1",
+  "intro": "Please answer the below questions based on your experience in the last session.",
+  "pages": [
+    {
+      "id": "participant",
+      "title": "Participant",
+      "questions": [
+        {
+          "id": "participant_number",
+          "type": "number",
+          "prompt": "Participant Number",
+          "required": true,
+          "min": 1,
+          "step": 1,
+          "placeholder": "e.g., 12"
+        }
+      ]
+    },
+    {
+      "id": "session",
+      "title": "Session",
+      "questions": [
+        {
+          "id": "session_number",
+          "type": "number",
+          "prompt": "Session Number",
+          "required": true,
+          "min": 1,
+          "step": 1,
+          "placeholder": "e.g., 3"
+        }
+      ]
+    },
+    {
+      "id": "air_thermal_1",
+      "title": "Air & Thermal",
+      "questions": [
+        {
+          "id": "aq_satisfaction",
+          "type": "likert",
+          "prompt": "How satisfied were you with the air quality during the last session?",
+          "required": true,
+          "points": 7,
+          "labels": [
+            "Very dissatisfied",
+            "Dissatisfied",
+            "Slightly dissatisfied",
+            "Neutral",
+            "Slightly satisfied",
+            "Satisfied",
+            "Very satisfied"
+          ],
+          "values": [
+            "Very dissatisfied",
+            "Dissatisfied",
+            "Slightly dissatisfied",
+            "Neutral",
+            "Slightly satisfied",
+            "Satisfied",
+            "Very satisfied"
+          ]
+        },
+        {
+          "id": "thermal_sensation",
+          "type": "likert",
+          "prompt": "During the last session, how did you feel thermally (overall)?",
+          "required": true,
+          "points": 7,
+          "labels": [
+            "Cold",
+            "Cool",
+            "Slightly cool",
+            "Neutral",
+            "Slightly warm",
+            "Warm",
+            "Hot"
+          ],
+          "values": [
+            "Cold",
+            "Cool",
+            "Slightly cool",
+            "Neutral",
+            "Slightly warm",
+            "Warm",
+            "Hot"
+          ]
+        },
+        {
+          "id": "thermal_satisfaction",
+          "type": "likert",
+          "prompt": "How satisfied were you with the thermal environment during the last session?",
+          "required": true,
+          "points": 7,
+          "labels": [
+            "Very dissatisfied",
+            "Dissatisfied",
+            "Slightly dissatisfied",
+            "Neutral",
+            "Slightly satisfied",
+            "Satisfied",
+            "Very satisfied"
+          ],
+          "values": [
+            "Very dissatisfied",
+            "Dissatisfied",
+            "Slightly dissatisfied",
+            "Neutral",
+            "Slightly satisfied",
+            "Satisfied",
+            "Very satisfied"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "thermal_2",
+      "title": "Thermal Preferences",
+      "questions": [
+        {
+          "id": "prefer_temp_change",
+          "type": "likert",
+          "prompt": "During the last session did you prefer to be...?",
+          "required": true,
+          "points": 3,
+          "labels": ["Cooler", "Without change", "Warmer"],
+          "values": ["Cooler", "Without change", "Warmer"]
+        },
+        {
+          "id": "prefer_air_movement",
+          "type": "likert",
+          "prompt": "During the last session did you prefer...?",
+          "required": true,
+          "points": 3,
+          "labels": ["Less air movement", "No change", "More air movement"],
+          "values": ["Less air movement", "No change", "More air movement"]
+        },
+        {
+          "id": "thermal_pleasantness",
+          "type": "likert",
+          "prompt": "During the last session, did you find the current thermal environment...?",
+          "required": true,
+          "points": 7,
+          "labels": [
+            "Very unpleasant",
+            "Unpleasant",
+            "Slightly unpleasant",
+            "Indifferent",
+            "Slightly pleasant",
+            "Pleasant",
+            "Very pleasant"
+          ],
+          "values": [
+            "Very unpleasant",
+            "Unpleasant",
+            "Slightly unpleasant",
+            "Indifferent",
+            "Slightly pleasant",
+            "Pleasant",
+            "Very pleasant"
+          ]
+        },
+        {
+          "id": "thermal_acceptability",
+          "type": "likert",
+          "prompt": "During the last session, did you find the current thermal environment...?",
+          "required": true,
+          "points": 5,
+          "labels": [
+            "Clearly unacceptable",
+            "Just unacceptable",
+            "Neutral",
+            "Just acceptable",
+            "Clearly acceptable"
+          ],
+          "values": [
+            "Clearly unacceptable",
+            "Just unacceptable",
+            "Neutral",
+            "Just acceptable",
+            "Clearly acceptable"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lighting",
+      "title": "Lighting",
+      "questions": [
+        {
+          "id": "lighting_satisfaction",
+          "type": "likert",
+          "prompt": "How satisfied were you with the quality of lighting in this space during the last session?",
+          "required": true,
+          "points": 7,
+          "labels": [
+            "Very dissatisfied",
+            "Dissatisfied",
+            "Slightly dissatisfied",
+            "Neutral",
+            "Slightly satisfied",
+            "Satisfied",
+            "Very satisfied"
+          ],
+          "values": [
+            "Very dissatisfied",
+            "Dissatisfied",
+            "Slightly dissatisfied",
+            "Neutral",
+            "Slightly satisfied",
+            "Satisfied",
+            "Very satisfied"
+          ]
+        },
+        {
+          "id": "glare_experience",
+          "type": "likert",
+          "prompt": "Did you experience any discomfort from glare during the last session?",
+          "required": true,
+          "points": 2,
+          "labels": ["Yes", "No"],
+          "values": ["Yes", "No"]
+        },
+        {
+          "id": "glare_level",
+          "type": "likert",
+          "prompt": "Please describe the level of glare during the last session",
+          "required": true,
+          "points": 4,
+          "labels": ["Imperceptible", "Noticeable", "Disturbing", "Intolerable"],
+          "values": ["Imperceptible", "Noticeable", "Disturbing", "Intolerable"],
+          "showIf": { "questionId": "glare_experience", "equals": "Yes" }
+        },
+        {
+          "id": "light_level_preference",
+          "type": "likert",
+          "prompt": "How would you describe the current light levels?",
+          "required": true,
+          "points": 7,
+          "labels": [
+            "I prefer much less light on my desk",
+            "I prefer less light on my desk",
+            "I prefer slightly less light on my desk",
+            "I feel that the amount of light is adequate now",
+            "I prefer slightly more light on my desk",
+            "I prefer more light on my desk",
+            "I prefer much more light on my desk"
+          ],
+          "values": [
+            "I prefer much less light on my desk",
+            "I prefer less light on my desk",
+            "I prefer slightly less light on my desk",
+            "I feel that the amount of light is adequate now",
+            "I prefer slightly more light on my desk",
+            "I prefer more light on my desk",
+            "I prefer much more light on my desk"
+          ]
+        },
+
+        {
+          "id": "aesthetic_interest",
+          "type": "slider",
+          "prompt": "From an aesthetic standpoint, how interesting were the facade and its accompanying sunlight patterns during the last session?",
+          "required": true,
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "minLabel": "Not at all",
+          "maxLabel": "Very much"
+        },
+
+        {
+          "id": "daylight_well_lit",
+          "type": "likert",
+          "prompt": "Would you say the room was well lit by daylight during the last session?",
+          "required": true,
+          "points": 2,
+          "labels": ["Yes", "No"],
+          "values": ["Yes", "No"]
+        }
+      ]
+    },
+    {
+      "id": "view",
+      "title": "View",
+      "questions": [
+        {
+          "id": "view_features_maintained",
+          "type": "slider",
+          "prompt": "How well did the facade system maintain the visibility of the view features you care about during the last session?",
+          "required": true,
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "minLabel": "Not at all maintained",
+          "maxLabel": "Very much maintained"
+        },
+        {
+          "id": "view_amount_satisfaction",
+          "type": "slider",
+          "prompt": "How satisfied were you with the amount of the view during the last session?",
+          "required": true,
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "minLabel": "Not at all",
+          "maxLabel": "Very much satisfied"
+        },
+        {
+          "id": "overall_view_satisfaction",
+          "type": "slider",
+          "prompt": "Overall, how satisfied were you with the view from the window during the last session?",
+          "required": true,
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "minLabel": "Not at all",
+          "maxLabel": "Very much satisfied"
+        }
+      ]
+    },
+    {
+      "id": "overall",
+      "title": "Overall",
+      "questions": [
+        {
+          "id": "overall_comfort",
+          "type": "likert",
+          "prompt": "How woud you rate the overall indoor environmental comfort during the last session?",
+          "required": true,
+          "points": 4,
+          "labels": ["Very comfortable", "Comfortable", "Uncomfortable", "Very uncomfortable"],
+          "values": ["Very comfortable", "Comfortable", "Uncomfortable", "Very uncomfortable"]
+        },
+        {
+          "id": "comfort_reason",
+          "type": "text",
+          "prompt": "Is there any specific reason why you find the overall indoor environment comfortable?",
+          "required": false,
+          "multiline": true,
+          "placeholder": "Optional"
+        },
+        {
+          "id": "disturbed_anything",
+          "type": "text",
+          "prompt": "Is there anything about the physical environment that disturbed you? (Answer 'No', if you are not disturbed by anything)",
+          "required": true,
+          "multiline": true,
+          "placeholder": "Type 'No' if nothing disturbed you"
+        },
+        {
+          "id": "desired_changes",
+          "type": "text",
+          "prompt": "Assume that you have to work all day from this space and full control on heating/cooling system and the facade system as well as desk layout, would you like any changes?",
+          "required": false,
+          "multiline": true,
+          "placeholder": "Optional"
+        }
+      ]
+    }
+  ]
+}
