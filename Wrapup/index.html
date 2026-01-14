@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ETH Zürich • Solskin Study Survey</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="appHeader">
+    <div class="headerInner">
+      <div class="logoRow">
+        <img class="logo eth" src="../Assets/eth_logo.jpg" alt="ETH Zürich" />
+        <div class="titleBlock">
+          <div class="studyKicker">ETH Zürich • Solskin Study</div>
+          <div class="studyTitle">Wrap-up Survey</div>
+        </div>
+        <img class="logo solskin" src="../Assets/solskin_logo.png" alt="Solskin" />
+      </div>
+
+      <div class="barRow">
+        <div class="barMeta" id="meta"></div>
+        <div class="progressWrap" aria-label="Progress">
+          <div class="progressBar"><div class="progressFill" id="progressFill"></div></div>
+          <div class="progressText" id="progressText">0%</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section id="card" class="card" aria-live="polite"></section>
+
+    <footer class="nav">
+      <button id="btnBack" class="btn ghost" type="button">Back</button>
+      <div class="spacer"></div>
+      <button id="btnNext" class="btn" type="button">Next</button>
+    </footer>
+
+    <p class="hint">
+      Responses are stored only on your local device and only saved when you download the results file.
+    </p>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
