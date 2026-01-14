@@ -11,7 +11,7 @@
    - Finish screen: Polybox upload button + email fallback
 */
 
-const POLYBOX_UPLOAD_URL = "https://polybox.ethz.ch/index.php/s/2HSKSHKn7i7QSTe";
+const POLYBOX_UPLOAD_URL = "https://polybox.ethz.ch/index.php/s/2GFCaRHZmgLe6P6";
 const EMAIL_TO = "kim@arch.ethz.ch";
 
 const state = {
