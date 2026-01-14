@@ -3,9 +3,15 @@
    - State persists until user changes
    - Logs every change (event log) + derives intervals
    - Offline: load live_survey.json via file picker (works when opened as file://)
+
+   Updates you requested:
+   - Show/record UTC (not Europe/Zurich) in UI + payload
+   - Replace mailto-only hint with Polybox upload option
+   - Keep a (ghost) email fallback button
 */
 
 const EMAIL_TO = "kim@arch.ethz.ch";
+const POLYBOX_UPLOAD_URL = "https://polybox.ethz.ch/index.php/s/2HSKSHKn7i7QSTe";
 const STORAGE_KEY = "solskin_live_autosave_v1";
 
 const state = {
@@ -21,7 +27,9 @@ const state = {
   // { qid, from, to, changedAtISO }
   events: [],
 
-  tz: Intl.DateTimeFormat().resolvedOptions().timeZone || null,
+  // Always present UTC in UI/payload; keep local timezone for diagnostics
+  tz: "UTC",
+  localTz: Intl.DateTimeFormat().resolvedOptions().timeZone || null,
   userAgent: navigator.userAgent
 };
 
@@ -38,23 +46,30 @@ function nowISO(){ return new Date().toISOString(); }
 function setLiveChip(){
   if (state.running){
     $liveChip.dataset.live = "true";
-    $liveChip.innerHTML = `<span class="liveDot"></span> LIVE • last: ${formatTime(new Date())}`;
+    // show last in UTC
+    $liveChip.innerHTML = `<span class="liveDot"></span> LIVE • last: ${formatTimeUTC(new Date())}`;
   } else {
     delete $liveChip.dataset.live;
     $liveChip.textContent = "NOT RUNNING";
   }
 }
 
-function formatTime(d){
-  // local time hh:mm:ss
-  return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+function formatTimeUTC(d){
+  // UTC time hh:mm:ss
+  return d.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    timeZone: "UTC"
+  });
 }
 
 function updateMeta(){
   const p = state.fields.participant_number ?? "?";
   const s = state.fields.session_number ?? "?";
   const run = state.running ? `RUNNING since ${state.startedAtISO}` : "Not running";
-  $meta.textContent = `P${p} • S${s} • ${run} • ${state.tz || "TZ?"}`;
+  // show UTC explicitly; keep localTz out of the header to avoid confusion
+  $meta.textContent = `P${p} • S${s} • ${run} • ${state.tz}`;
 }
 
 function safeName(x){
@@ -69,6 +84,7 @@ function autosave(){
     savedAtISO: nowISO(),
     running: state.running,
     startedAtISO: state.startedAtISO,
+    endedAtISO: state.endedAtISO ?? null,
     fields: state.fields,
     current: state.current,
     events: state.events
@@ -86,6 +102,7 @@ function restoreAutosave(cfg){
 
     state.running = !!saved.running;
     state.startedAtISO = saved.startedAtISO || null;
+    state.endedAtISO = saved.endedAtISO || null;
     state.fields = saved.fields || {};
     state.current = saved.current || {};
     state.events = saved.events || [];
@@ -142,6 +159,7 @@ function startSession(){
 
   state.running = true;
   state.startedAtISO = nowISO();
+  state.endedAtISO = null;
 
   // log initial state for each question (so intervals have a start)
   for (const q of state.cfg.questions){
@@ -211,17 +229,30 @@ function downloadJSON(filename, obj){
   URL.revokeObjectURL(url);
 }
 
-function downloadResults(includeMailtoHint){
+function openUploadPage(){
+  // Opening in new tab; some browsers might block if not triggered by a user click,
+  // so we always also show a clickable button in the UI.
+  try{
+    window.open(POLYBOX_UPLOAD_URL, "_blank", "noopener");
+  }catch{
+    // ignore
+  }
+}
+
+function downloadResults(includeUploadHint){
   const p = safeName(state.fields.participant_number);
   const s = safeName(state.fields.session_number);
-  const t = nowISO().replace(/[:]/g, "-");
-  const filename = `live_P${p}_S${s}_${t}.json`;
+  const tISO = nowISO();                // UTC ISO
+  const tSafe = tISO.replace(/[:]/g, "-");
+  const filename = `live_P${p}_S${s}_${tSafe}.json`;
 
   const payload = {
     surveyId: state.cfg.surveyId,
     title: state.cfg.title,
     version: state.cfg.version,
-    timezone: state.tz,
+
+    timezone: state.tz,           // "UTC"
+    localTimezone: state.localTz, // e.g. "Europe/Zurich"
     userAgent: state.userAgent,
 
     runningAtDownload: state.running,
@@ -237,7 +268,11 @@ function downloadResults(includeMailtoHint){
 
   downloadJSON(filename, payload);
 
-  if (includeMailtoHint){
+  if (includeUploadHint){
+    // Optional: try to open Polybox right away (browser may block popups)
+    openUploadPage();
+
+    // Also show an on-page panel so it's always possible without popups
     const subject = encodeURIComponent(`Solskin LIVE logger — P${p} S${s}`);
     const body = encodeURIComponent(
 `Hello,
@@ -249,12 +284,41 @@ ${filename}
 
 Participant: ${state.fields.participant_number}
 Session: ${state.fields.session_number}
-Downloaded at (UTC): ${t}
+Downloaded at (UTC): ${tISO}
 
 Thank you.`
     );
     const mailto = `mailto:${EMAIL_TO}?subject=${subject}&body=${body}`;
-    window.open(mailto, "_blank");
+
+    // Append an upload helper panel at the top of the card (non-destructive)
+    const helper = document.createElement("div");
+    helper.className = "summaryBox";
+    helper.style.marginTop = "12px";
+    helper.innerHTML = `
+      <p class="summaryTitle">Upload your downloaded file</p>
+      <p class="summaryLine">
+        A results file was downloaded: <code>${escapeHTML(filename)}</code><br>
+        Preferred: upload it to Polybox. If that does not work, email it to the researcher.
+      </p>
+      <div class="kv" style="gap:10px">
+        <a class="btn" style="text-decoration:none; display:inline-block"
+           href="${POLYBOX_UPLOAD_URL}" target="_blank" rel="noopener">
+          Upload to Polybox
+        </a>
+        <a class="btn ghost" style="text-decoration:none; display:inline-block"
+           href="${mailto}">
+          Email results to ${escapeHTML(EMAIL_TO)}
+        </a>
+      </div>
+    `;
+
+    // Insert right after the "Live status" box if it exists, otherwise top of card
+    const grid = $card.querySelector(".summaryGrid");
+    if (grid){
+      grid.appendChild(helper);
+    } else {
+      $card.prepend(helper);
+    }
   }
 }
 
@@ -303,7 +367,7 @@ function render(){
         <p class="summaryTitle">Live status</p>
         <p class="summaryLine">
           Keep this tab open. Your selection stays active until you change it.
-          Every change is recorded with timestamps.
+          Every change is recorded with timestamps (UTC).
         </p>
         <div class="kv">
           <span>Thermal: <strong>${escapeHTML(String(summaryThermal))}</strong></span>
@@ -489,6 +553,8 @@ function loadCfg(cfg){
 /* Buttons */
 $btnStart.addEventListener("click", startSession);
 $btnEnd.addEventListener("click", endSessionAndDownload);
+
+// “Download” button now shows upload helper panel (Polybox + email fallback)
 $btnDownload.addEventListener("click", () => downloadResults(true));
 
 /* Boot: start with "load config" */
