@@ -4,13 +4,15 @@
    - Logs every change (event log) + derives intervals
    - Offline: load live_survey.json via file picker (works when opened as file://)
 
-   Updates you requested:
-   - Show/record UTC (not Europe/Zurich) in UI + payload
-   - Replace mailto-only hint with Polybox upload option
-   - Keep a (ghost) email fallback button
+   Update in this version (your request):
+   - The button that used to be "Download now" is now "Upload to Polybox"
+   - Clicking it will:
+       (1) download the results JSON locally (browser requirement)
+       (2) open your Polybox upload-only link in a new tab
+       (3) show an on-page instruction panel with the exact filename to upload
+   - UI/payload timezone set to UTC (timestamps already UTC via toISOString)
 */
 
-const EMAIL_TO = "kim@arch.ethz.ch";
 const POLYBOX_UPLOAD_URL = "https://polybox.ethz.ch/index.php/s/2HSKSHKn7i7QSTe";
 const STORAGE_KEY = "solskin_live_autosave_v1";
 
@@ -27,7 +29,11 @@ const state = {
   // { qid, from, to, changedAtISO }
   events: [],
 
-  // Always present UTC in UI/payload; keep local timezone for diagnostics
+  // For showing the filename the user must upload
+  lastDownloadedFilename: null,
+  lastDownloadedAtISO: null,
+
+  // Show UTC in UI/payload; keep localTz optionally
   tz: "UTC",
   localTz: Intl.DateTimeFormat().resolvedOptions().timeZone || null,
   userAgent: navigator.userAgent
@@ -39,14 +45,13 @@ const $liveChip = document.getElementById("liveChip");
 
 const $btnStart = document.getElementById("btnStart");
 const $btnEnd = document.getElementById("btnEnd");
-const $btnDownload = document.getElementById("btnDownload");
+const $btnUpload = document.getElementById("btnDownload"); // same DOM id, different meaning
 
-function nowISO(){ return new Date().toISOString(); }
+function nowISO(){ return new Date().toISOString(); } // UTC ISO (ends with Z)
 
 function setLiveChip(){
   if (state.running){
     $liveChip.dataset.live = "true";
-    // show last in UTC
     $liveChip.innerHTML = `<span class="liveDot"></span> LIVE • last: ${formatTimeUTC(new Date())}`;
   } else {
     delete $liveChip.dataset.live;
@@ -55,7 +60,6 @@ function setLiveChip(){
 }
 
 function formatTimeUTC(d){
-  // UTC time hh:mm:ss
   return d.toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit",
@@ -68,7 +72,6 @@ function updateMeta(){
   const p = state.fields.participant_number ?? "?";
   const s = state.fields.session_number ?? "?";
   const run = state.running ? `RUNNING since ${state.startedAtISO}` : "Not running";
-  // show UTC explicitly; keep localTz out of the header to avoid confusion
   $meta.textContent = `P${p} • S${s} • ${run} • ${state.tz}`;
 }
 
@@ -87,7 +90,9 @@ function autosave(){
     endedAtISO: state.endedAtISO ?? null,
     fields: state.fields,
     current: state.current,
-    events: state.events
+    events: state.events,
+    lastDownloadedFilename: state.lastDownloadedFilename,
+    lastDownloadedAtISO: state.lastDownloadedAtISO
   };
   localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
 }
@@ -106,6 +111,8 @@ function restoreAutosave(cfg){
     state.fields = saved.fields || {};
     state.current = saved.current || {};
     state.events = saved.events || [];
+    state.lastDownloadedFilename = saved.lastDownloadedFilename || null;
+    state.lastDownloadedAtISO = saved.lastDownloadedAtISO || null;
     return true;
   }catch{
     return false;
@@ -126,7 +133,7 @@ function logChange(qid, from, to){
   const changedAtISO = nowISO();
   state.events.push({ qid, from, to, changedAtISO });
   autosave();
-  setLiveChip(); // updates last time
+  setLiveChip();
 }
 
 function setCurrent(qid, value){
@@ -175,20 +182,20 @@ function startSession(){
 
 function endSessionAndDownload(){
   if (!state.running){
-    // still allow download if they want
-    downloadResults(true);
+    // still allow upload flow
+    uploadToPolyboxFlow();
     return;
   }
   state.running = false;
   state.endedAtISO = nowISO();
   autosave();
-  downloadResults(false);
+
+  // after ending, go directly to upload flow
+  uploadToPolyboxFlow();
   render();
 }
 
 function deriveIntervals(){
-  // Produces intervals per question:
-  // { qid, value, startISO, endISO }
   const intervals = [];
   const byQ = new Map();
 
@@ -200,7 +207,6 @@ function deriveIntervals(){
   const endISO = state.running ? nowISO() : (state.endedAtISO || nowISO());
 
   for (const [qid, evs] of byQ.entries()){
-    // ensure chronological
     evs.sort((a,b) => a.changedAtISO.localeCompare(b.changedAtISO));
 
     for (let i=0; i<evs.length; i++){
@@ -229,35 +235,30 @@ function downloadJSON(filename, obj){
   URL.revokeObjectURL(url);
 }
 
-function openUploadPage(){
-  // Opening in new tab; some browsers might block if not triggered by a user click,
-  // so we always also show a clickable button in the UI.
+function openPolyboxUpload(){
+  // Usually allowed if called from a user click; may still be blocked in some cases.
   try{
     window.open(POLYBOX_UPLOAD_URL, "_blank", "noopener");
   }catch{
-    // ignore
+    // ignore; we still show the clickable link in the UI
   }
 }
 
-function downloadResults(includeUploadHint){
-  const p = safeName(state.fields.participant_number);
-  const s = safeName(state.fields.session_number);
-  const tISO = nowISO();                // UTC ISO
-  const tSafe = tISO.replace(/[:]/g, "-");
-  const filename = `live_P${p}_S${s}_${tSafe}.json`;
-
-  const payload = {
+function buildResultsPayload(downloadedAtISO){
+  return {
     surveyId: state.cfg.surveyId,
     title: state.cfg.title,
     version: state.cfg.version,
 
-    timezone: state.tz,           // "UTC"
-    localTimezone: state.localTz, // e.g. "Europe/Zurich"
+    timezone: state.tz,            // "UTC"
+    localTimezone: state.localTz,  // for diagnostics
     userAgent: state.userAgent,
 
     runningAtDownload: state.running,
     startedAtISO: state.startedAtISO,
     endedAtISO: state.endedAtISO,
+
+    downloadedAtISO,
 
     fields: state.fields,
     currentAtDownload: state.current,
@@ -265,66 +266,46 @@ function downloadResults(includeUploadHint){
     events: state.events,
     intervals: deriveIntervals()
   };
+}
 
+function uploadToPolyboxFlow(){
+  if (!state.cfg){
+    alert("Please load live_survey.json first.");
+    return;
+  }
+  if (!validateFields()){
+    alert("Please fill Participant Number and Session Number first.");
+    return;
+  }
+
+  const p = safeName(state.fields.participant_number);
+  const s = safeName(state.fields.session_number);
+  const downloadedAtISO = nowISO();
+  const tSafe = downloadedAtISO.replace(/[:]/g, "-");
+  const filename = `live_P${p}_S${s}_${tSafe}.json`;
+
+  const payload = buildResultsPayload(downloadedAtISO);
+
+  // 1) download locally (browser requirement)
   downloadJSON(filename, payload);
 
-  if (includeUploadHint){
-    // Optional: try to open Polybox right away (browser may block popups)
-    openUploadPage();
+  // 2) remember filename and show helper panel
+  state.lastDownloadedFilename = filename;
+  state.lastDownloadedAtISO = downloadedAtISO;
+  autosave();
 
-    // Also show an on-page panel so it's always possible without popups
-    const subject = encodeURIComponent(`Solskin LIVE logger — P${p} S${s}`);
-    const body = encodeURIComponent(
-`Hello,
+  // 3) open Polybox upload-only page
+  openPolyboxUpload();
 
-I used the live in-session comfort logger.
-
-Please find the attached results JSON file:
-${filename}
-
-Participant: ${state.fields.participant_number}
-Session: ${state.fields.session_number}
-Downloaded at (UTC): ${tISO}
-
-Thank you.`
-    );
-    const mailto = `mailto:${EMAIL_TO}?subject=${subject}&body=${body}`;
-
-    // Append an upload helper panel at the top of the card (non-destructive)
-    const helper = document.createElement("div");
-    helper.className = "summaryBox";
-    helper.style.marginTop = "12px";
-    helper.innerHTML = `
-      <p class="summaryTitle">Upload your downloaded file</p>
-      <p class="summaryLine">
-        A results file was downloaded: <code>${escapeHTML(filename)}</code><br>
-        Preferred: upload it to Polybox. If that does not work, email it to the researcher.
-      </p>
-      <div class="kv" style="gap:10px">
-        <a class="btn" style="text-decoration:none; display:inline-block"
-           href="${POLYBOX_UPLOAD_URL}" target="_blank" rel="noopener">
-          Upload to Polybox
-        </a>
-        <a class="btn ghost" style="text-decoration:none; display:inline-block"
-           href="${mailto}">
-          Email results to ${escapeHTML(EMAIL_TO)}
-        </a>
-      </div>
-    `;
-
-    // Insert right after the "Live status" box if it exists, otherwise top of card
-    const grid = $card.querySelector(".summaryGrid");
-    if (grid){
-      grid.appendChild(helper);
-    } else {
-      $card.prepend(helper);
-    }
-  }
+  // 4) render so the user sees instructions even if popup is blocked
+  render();
 }
 
 function render(){
   updateMeta();
   setLiveChip();
+
+  if (!$btnUpload) return; // safety
 
   if (!state.cfg){
     $card.innerHTML = `
@@ -335,7 +316,8 @@ function render(){
     `;
     $btnStart.disabled = true;
     $btnEnd.disabled = true;
-    $btnDownload.disabled = true;
+    $btnUpload.disabled = true;
+    $btnUpload.textContent = "Upload to Polybox";
 
     document.getElementById("cfgFile").addEventListener("change", async (e) => {
       const file = e.target.files?.[0];
@@ -353,13 +335,35 @@ function render(){
   // Buttons
   $btnStart.disabled = state.running;
   $btnEnd.disabled = !state.running;
-  $btnDownload.disabled = false;
+  $btnUpload.disabled = false;
+  $btnUpload.textContent = "Upload to Polybox";
 
   // Render fields + controls
   const summaryThermal = state.current.thermal_sensation ?? (getQ("thermal_sensation")?.default ?? "—");
   const summaryGlare = state.current.glare_discomfort ?? (getQ("glare_discomfort")?.default ?? "—");
   const glareEnabled = getEnabled(getQ("glare_amount"));
   const summaryGlareAmt = glareEnabled ? (state.current.glare_amount ?? (getQ("glare_amount")?.default ?? "—")) : "—";
+
+  const uploadPanel = state.lastDownloadedFilename ? `
+    <div class="summaryGrid" style="margin-top:12px">
+      <div class="summaryBox">
+        <p class="summaryTitle">Upload results</p>
+        <p class="summaryLine">
+          A results file was downloaded: <span class="code">${escapeHTML(state.lastDownloadedFilename)}</span><br>
+          Please upload it to Polybox (no login required).
+        </p>
+        <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
+          <a class="btn" style="text-decoration:none; display:inline-block"
+             href="${POLYBOX_UPLOAD_URL}" target="_blank" rel="noopener">
+            Open Polybox upload page
+          </a>
+        </div>
+        <p class="summaryLine" style="margin-top:10px">
+          On the Polybox page, choose the downloaded JSON file and upload it.
+        </p>
+      </div>
+    </div>
+  ` : "";
 
   $card.innerHTML = `
     <div class="summaryGrid">
@@ -379,6 +383,7 @@ function render(){
 
     ${renderFields()}
     ${renderControls()}
+    ${uploadPanel}
   `;
 
   wireFieldHandlers();
@@ -493,10 +498,9 @@ function wireControlHandlers(){
 
       setCurrent(qid, value);
 
-      // If glare changed to No, disable amount but keep last value (or set to default)
+      // If glare changed to No, disable amount but keep last value
       if (qid === "glare_discomfort" && value === "No"){
-        // optional: still log setting to default 1 (comment out if you prefer keeping last)
-        // setCurrent("glare_amount", getQ("glare_amount").default ?? 1);
+        // optional: setCurrent("glare_amount", getQ("glare_amount").default ?? 1);
       }
 
       render();
@@ -539,6 +543,8 @@ function loadCfg(cfg){
       state.fields = {};
       state.current = {};
       state.events = [];
+      state.lastDownloadedFilename = null;
+      state.lastDownloadedAtISO = null;
     }
   } else {
     // init defaults
@@ -554,10 +560,10 @@ function loadCfg(cfg){
 $btnStart.addEventListener("click", startSession);
 $btnEnd.addEventListener("click", endSessionAndDownload);
 
-// “Download” button now shows upload helper panel (Polybox + email fallback)
-$btnDownload.addEventListener("click", () => downloadResults(true));
+// This button is now "Upload to Polybox"
+$btnUpload.addEventListener("click", uploadToPolyboxFlow);
 
-/* Boot: start with "load config" */
+/* Boot */
 render();
 
 /* utils */
