@@ -13,7 +13,7 @@
    - UI/payload timezone set to UTC (timestamps already UTC via toISOString)
 */
 
-const POLYBOX_UPLOAD_URL = "https://polybox.ethz.ch/index.php/s/2HSKSHKn7i7QSTe";
+const POLYBOX_UPLOAD_URL = "https://polybox.ethz.ch/index.php/s/kT7RjaB3wnCWmwJ";
 const STORAGE_KEY = "solskin_live_autosave_v1";
 
 const state = {
