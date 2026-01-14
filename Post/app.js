@@ -456,7 +456,7 @@ Completed at (UTC): ${state.endedAtISO}
 
 Thank you.`
   );
-  const polyboxUploadUrl = "https://polybox.ethz.ch/index.php/s/2HSKSHKn7i7QSTe";
+  const polyboxUploadUrl = "https://polybox.ethz.ch/index.php/s/LWPpg7GMXSjeGRj";
 
   $card.innerHTML = `
     <h1 class="h1">Done</h1>
