@@ -456,23 +456,24 @@ Completed at (UTC): ${state.endedAtISO}
 
 Thank you.`
   );
-  const mailto = `mailto:${to}?subject=${subject}&body=${body}`;
+  const polyboxUploadUrl = "https://polybox.ethz.ch/index.php/s/2HSKSHKn7i7QSTe";
 
   $card.innerHTML = `
     <h1 class="h1">Done</h1>
     <p class="sub">
       A results file was downloaded: <code>${escapeHTML(filename)}</code><br>
-      Please send it back to the researcher.
+      Please upload it using the button below.
     </p>
 
     <div class="choices" style="margin-top:12px">
-      <a class="btn" style="text-decoration:none; display:inline-block" href="${mailto}">
-        Email results to kim@arch.ethz.ch
+      <a class="btn" style="text-decoration:none; display:inline-block"
+         href="${polyboxUploadUrl}" target="_blank" rel="noopener">
+        Upload results to Polybox
       </a>
     </div>
 
     <p class="sub" style="margin-top:12px">
-      In the email, attach the downloaded JSON file and send.
+      On the Polybox page, choose the downloaded JSON file (<code>${escapeHTML(filename)}</code>) and upload it.
     </p>
   `;
   $btnBack.disabled = true;
