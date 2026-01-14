@@ -1,0 +1,653 @@
+{
+  "surveyId": "solskin_baseline_v1",
+  "title": "Solskin Study — Baseline Survey",
+  "version": "1.2",
+  "intro": "This survey is completed once at the beginning of the experiment. Responses are stored locally and saved only when you download the results file.",
+  "pages": [
+    {
+      "title": "Start",
+      "subtitle": "Please complete the participant information first.",
+      "questions": [
+        {
+          "id": "participant_number",
+          "type": "number",
+          "prompt": "Participant Index",
+          "help": "Enter the participant number provided by the researcher.",
+          "required": true,
+          "min": 1,
+          "step": 1,
+          "placeholder": "e.g., 1"
+        },
+        {
+          "id": "consent_obtained",
+          "type": "singleChoice",
+          "prompt": "Consent obtained",
+          "help": "Confirm that you agree to participate in the study.",
+          "required": true,
+          "options": ["Yes", "No"]
+        }
+      ]
+    },
+
+    {
+      "title": "Demographics",
+      "subtitle": "These questions help us interpret comfort and preference differences.",
+      "questions": [
+        {
+          "id": "age_group",
+          "type": "singleChoice",
+          "prompt": "Age",
+          "required": true,
+          "options": [
+            "Less than 20",
+            "20 - 30",
+            "30 - 40",
+            "40 - 50",
+            "Over 50",
+            "Prefer not to answer"
+          ]
+        },
+        {
+          "id": "country_origin",
+          "type": "text",
+          "prompt": "Country of origin (optional)",
+          "help": "You may leave this blank.",
+          "required": false,
+          "placeholder": "Type here…"
+        },
+        {
+          "id": "english_native",
+          "type": "singleChoice",
+          "prompt": "Is English your native language?",
+          "required": true,
+          "options": ["Yes", "No"]
+        },
+        {
+          "id": "english_proficiency",
+          "type": "singleChoice",
+          "prompt": "English proficiency",
+          "help": "Choose the option that best describes you.",
+          "required": true,
+          "options": [
+            "Intermediate (B1-B2)",
+            "Advanced (C1)",
+            "Proficient (C2)",
+            "Native language"
+          ]
+        },
+        {
+          "id": "vision_corrected",
+          "type": "singleChoice",
+          "prompt": "Are you using any vision correction right now?",
+          "required": true,
+          "options": ["No", "Yes, glasses", "Yes, contact lenses", "Yes, laser", "Other"]
+        },
+        {
+          "id": "vision_corrected_other",
+          "type": "text",
+          "prompt": "If other, please specify",
+          "required": false,
+          "placeholder": "Type here…",
+          "showIf": { "questionId": "vision_corrected", "equals": "Other" }
+        }
+      ]
+    },
+
+    {
+      "title": "Your workspace",
+      "subtitle": "Please answer based on your usual workspace.",
+      "questions": [
+        {
+          "id": "screen_based_task",
+          "type": "singleChoice",
+          "prompt": "Does your workday consist predominantly of screen-based tasks?",
+          "required": true,
+          "options": ["Yes", "No"]
+        },
+        {
+          "id": "workspace_floor",
+          "type": "number",
+          "prompt": "Workspace floor",
+          "help": "For example: basement = -1, ground floor = 0, first floor = 1, etc.",
+          "required": true,
+          "min": -5,
+          "step": 1,
+          "placeholder": "e.g., 1"
+        },
+        {
+          "id": "workspace_area",
+          "type": "singleChoice",
+          "prompt": "Workspace orientation / area",
+          "required": true,
+          "options": ["North", "East", "South", "West", "I don't know", "Other"]
+        },
+        {
+          "id": "workspace_area_other",
+          "type": "text",
+          "prompt": "If other, please specify",
+          "required": false,
+          "placeholder": "Type here…",
+          "showIf": { "questionId": "workspace_area", "equals": "Other" }
+        },
+
+        {
+          "id": "near_window",
+          "type": "singleChoice",
+          "prompt": "Is your workstation within ~5 meters of a window?",
+          "required": true,
+          "options": ["Yes", "No", "Maybe"]
+        },
+        {
+          "id": "near_exterior_wall",
+          "type": "singleChoice",
+          "prompt": "Is your workstation within ~5 meters of an exterior wall?",
+          "required": true,
+          "options": ["Yes", "No", "Maybe"]
+        },
+
+        {
+          "id": "shading_system",
+          "type": "multiChoice",
+          "prompt": "Shading system(s) in your workspace",
+          "help": "Select all that apply.",
+          "required": true,
+          "options": [
+            "Fabric roller shading",
+            "Venetian blinds",
+            "Curtains",
+            "Electrochromic glazing",
+            "None",
+            "Other"
+          ]
+        },
+        {
+          "id": "shading_system_other",
+          "type": "text",
+          "prompt": "If other, please specify",
+          "required": false,
+          "placeholder": "Type here…",
+          "showIf": { "questionId": "shading_system", "includes": "Other" }
+        },
+
+        {
+          "id": "hvac_system",
+          "type": "multiChoice",
+          "prompt": "Heating / cooling available in your workspace",
+          "help": "Select all that apply.",
+          "required": true,
+          "options": [
+            "Openable window(s)",
+            "Fan",
+            "Air Conditioning Unit",
+            "Radiator (wall)",
+            "Radiant panels (ceiling)",
+            "None",
+            "I don't know",
+            "Other"
+          ]
+        },
+        {
+          "id": "hvac_system_other",
+          "type": "text",
+          "prompt": "If other, please specify",
+          "required": false,
+          "placeholder": "Type here…",
+          "showIf": { "questionId": "hvac_system", "includes": "Other" }
+        },
+
+        {
+          "id": "control_over_systems",
+          "type": "singleChoice",
+          "prompt": "Do you have control over shading and/or heating/cooling?",
+          "required": true,
+          "options": ["Yes", "No", "Some / partial control", "I don't know"]
+        },
+
+        {
+          "id": "thermal_adjust_frequency",
+          "type": "singleChoice",
+          "prompt": "If it were possible, how often would you like to adjust thermal settings?",
+          "required": true,
+          "options": ["Once or twice per year", "Once a week", "Every few hours"]
+        },
+
+        {
+          "id": "prefer_ai_control",
+          "type": "singleChoice",
+          "prompt": "If AI could learn from your inputs, would you prefer AI control over manual control?",
+          "required": true,
+          "options": ["Yes", "No", "It depends"]
+        },
+        {
+          "id": "prefer_ai_control_explain",
+          "type": "text",
+          "prompt": "If it depends, what would it depend on?",
+          "required": false,
+          "multiline": true,
+          "placeholder": "Type here…",
+          "showIf": { "questionId": "prefer_ai_control", "equals": "It depends" }
+        }
+      ]
+    },
+
+    {
+      "title": "Sensitivity and experience",
+      "subtitle": "Please answer based on your general experience (past four weeks).",
+      "questions": [
+        {
+          "id": "light_sensitive_general",
+          "type": "singleChoice",
+          "prompt": "Do you feel sensitive to bright light in general?",
+          "required": true,
+          "options": ["Yes", "No", "I don't know"]
+        },
+        {
+          "id": "visual_discomfort_frequency_4w",
+          "type": "singleChoice",
+          "prompt": "How often did you experience visual discomfort at your workstation?",
+          "help": "Examples: too bright, too dim, glare.",
+          "required": true,
+          "options": [
+            "Never",
+            "Not in the last 4 weeks",
+            "1 to 3 days in the last 4 weeks",
+            "1 to 3 days per week in the last 4 weeks",
+            "Every or almost every workday"
+          ]
+        },
+        {
+          "id": "thermal_sensitive_general",
+          "type": "singleChoice",
+          "prompt": "Do you feel sensitive to indoor thermal conditions in general?",
+          "required": true,
+          "options": ["Yes", "No", "I don't know"]
+        },
+        {
+          "id": "thermal_discomfort_frequency_4w",
+          "type": "singleChoice",
+          "prompt": "How often did you experience thermal discomfort at your workstation?",
+          "help": "Examples: too cold, too hot, temperature varies too much.",
+          "required": true,
+          "options": [
+            "Never",
+            "Not in the last 4 weeks",
+            "1 to 3 days in the last 4 weeks",
+            "1 to 3 days per week in the last 4 weeks",
+            "Every or almost every workday"
+          ]
+        }
+      ]
+    },
+
+    {
+      "title": "Personal factor",
+      "subtitle": "These questions reflect your current state right now.",
+      "questions": [
+        {
+          "id": "commute_mode",
+          "type": "multiChoice",
+          "prompt": "How did you come here today?",
+          "help": "Select all that apply.",
+          "required": true,
+          "options": [
+            "Car",
+            "Public transport",
+            "Biking",
+            "Walking (more than 5 minutes)",
+            "I was already on campus at least an hour ago",
+            "Other"
+          ]
+        },
+        {
+          "id": "commute_mode_other",
+          "type": "text",
+          "prompt": "If other, please specify",
+          "required": false,
+          "placeholder": "Type here…",
+          "showIf": { "questionId": "commute_mode", "includes": "Other" }
+        },
+
+        {
+          "id": "clothing_levels",
+          "type": "multiChoice",
+          "prompt": "Current clothing (select all that apply)",
+          "required": true,
+          "options": [
+            "Shorts",
+            "Long trousers",
+            "Sweat pants",
+            "Short-sleeve shirt",
+            "Long-sleeve shirt",
+            "Sweater / second layer",
+            "Jacket",
+            "Closed shoes",
+            "Sandals",
+            "Hat / head covering",
+            "Other"
+          ]
+        },
+        {
+          "id": "clothing_other",
+          "type": "text",
+          "prompt": "If other, please specify",
+          "required": false,
+          "placeholder": "Type here…",
+          "showIf": { "questionId": "clothing_levels", "includes": "Other" }
+        }
+      ]
+    },
+
+    {
+      "title": "Solskin-related",
+      "subtitle": "Please ask the researcher for the Solskin introduction before answering this section.",
+      "questions": [
+        {
+          "id": "solar_panels_home",
+          "type": "singleChoice",
+          "prompt": "Do you have solar panels installed at your home?",
+          "required": true,
+          "options": [
+            "Yes",
+            "No, and I am considering Solskin as an option",
+            "No, but I am interested in getting some",
+            "No, and I am not looking to change it for now"
+          ]
+        },
+        {
+          "id": "tech_enthusiast",
+          "type": "slider",
+          "prompt": "How much of a tech enthusiast are you?",
+          "required": true,
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "minLabel": "Technology scares me",
+          "maxLabel": "I love gadgets"
+        },
+        {
+          "id": "knew_solskin_before",
+          "type": "singleChoice",
+          "prompt": "Did you know about Solskin before today?",
+          "required": true,
+          "options": ["Yes", "No"]
+        },
+        {
+          "id": "solskin_first_impression",
+          "type": "text",
+          "prompt": "First impression (optional)",
+          "required": false,
+          "multiline": true,
+          "placeholder": "Type here…"
+        },
+
+        {
+          "id": "ui_looks",
+          "type": "slider",
+          "prompt": "How good does the control UI look?",
+          "required": true,
+          "min": 1,
+          "max": 7,
+          "step": 1,
+          "minLabel": "Not good at all",
+          "maxLabel": "Very good"
+        },
+        {
+          "id": "ui_intuitive",
+          "type": "slider",
+          "prompt": "How intuitive is the control UI?",
+          "required": true,
+          "min": 1,
+          "max": 7,
+          "step": 1,
+          "minLabel": "Not intuitive at all",
+          "maxLabel": "Very intuitive"
+        },
+
+        {
+          "id": "solskin_at_home",
+          "type": "slider",
+          "prompt": "How would you perceive Solskin installed at your home?",
+          "required": true,
+          "min": 1,
+          "max": 7,
+          "step": 1,
+          "minLabel": "Very negatively",
+          "maxLabel": "Very positively"
+        },
+        {
+          "id": "solskin_at_work",
+          "type": "slider",
+          "prompt": "How would you perceive Solskin installed at your workplace?",
+          "required": true,
+          "min": 1,
+          "max": 7,
+          "step": 1,
+          "minLabel": "Very negatively",
+          "maxLabel": "Very positively"
+        },
+        {
+          "id": "solskin_in_public",
+          "type": "slider",
+          "prompt": "How would you perceive Solskin installed in a public space?",
+          "help": "Example: restaurant, gym, etc.",
+          "required": true,
+          "min": 1,
+          "max": 7,
+          "step": 1,
+          "minLabel": "Very negatively",
+          "maxLabel": "Very positively"
+        },
+        {
+          "id": "solskin_likely_use_daily",
+          "type": "slider",
+          "prompt": "How likely would you be to use a system like Solskin in daily life?",
+          "required": true,
+          "min": 1,
+          "max": 7,
+          "step": 1,
+          "minLabel": "Very unlikely",
+          "maxLabel": "Very likely"
+        },
+
+        {
+          "id": "solskin_like",
+          "type": "text",
+          "prompt": "What do you like (if anything)?",
+          "required": false,
+          "multiline": true,
+          "placeholder": "Type here…"
+        },
+        {
+          "id": "solskin_dislike",
+          "type": "text",
+          "prompt": "What don’t you like (if anything)?",
+          "required": false,
+          "multiline": true,
+          "placeholder": "Type here…"
+        },
+        {
+          "id": "solskin_suggest_change",
+          "type": "text",
+          "prompt": "Any change you would like to suggest?",
+          "help": "Design, function, UI, etc. (optional)",
+          "required": false,
+          "multiline": true,
+          "placeholder": "Type here…"
+        }
+      ]
+    },
+
+    {
+      "title": "IEQ (right now)",
+      "subtitle": "Please answer based on how you feel at this moment in this room.",
+      "questions": [
+        {
+          "id": "mood_happy",
+          "type": "slider",
+          "prompt": "Mood",
+          "help": "How do you feel at the moment?",
+          "required": true,
+          "min": 1,
+          "max": 7,
+          "step": 1,
+          "minLabel": "Very unhappy",
+          "maxLabel": "Very happy"
+        },
+        {
+          "id": "mood_arousal",
+          "type": "slider",
+          "prompt": "Activation / sleepiness",
+          "help": "How do you feel at the moment?",
+          "required": true,
+          "min": 1,
+          "max": 7,
+          "step": 1,
+          "minLabel": "Very activated",
+          "maxLabel": "Very sleepy"
+        },
+
+        {
+          "id": "overall_ieq_comfort",
+          "type": "singleChoice",
+          "prompt": "Overall indoor environmental comfort",
+          "help": "Considering light, temperature, noise, and air quality.",
+          "required": true,
+          "options": ["Very comfortable", "Comfortable", "Uncomfortable", "Very uncomfortable"]
+        },
+
+        {
+          "id": "air_quality_satisfaction",
+          "type": "slider",
+          "prompt": "Air quality satisfaction",
+          "required": true,
+          "min": 1,
+          "max": 7,
+          "step": 1,
+          "minLabel": "Very dissatisfied",
+          "maxLabel": "Very satisfied"
+        },
+
+        {
+          "id": "thermal_sensation_now",
+          "type": "singleChoice",
+          "prompt": "Thermal sensation",
+          "help": "At this precise moment.",
+          "required": true,
+          "options": ["Cold", "Neutral", "Warm"]
+        },
+        {
+          "id": "thermal_satisfaction_now",
+          "type": "slider",
+          "prompt": "Thermal environment satisfaction",
+          "required": true,
+          "min": 1,
+          "max": 7,
+          "step": 1,
+          "minLabel": "Very dissatisfied",
+          "maxLabel": "Very satisfied"
+        },
+        {
+          "id": "thermal_prefer_now",
+          "type": "singleChoice",
+          "prompt": "Thermal preference",
+          "help": "Right now, would you prefer to be…",
+          "required": true,
+          "options": ["Cooler", "Without change", "Warmer"]
+        },
+        {
+          "id": "air_movement_prefer_now",
+          "type": "singleChoice",
+          "prompt": "Air movement preference",
+          "help": "Right now, would you prefer…",
+          "required": true,
+          "options": ["Less air movement", "No change", "More air movement"]
+        },
+
+        {
+          "id": "lighting_quality_satisfaction",
+          "type": "slider",
+          "prompt": "Lighting quality satisfaction",
+          "required": true,
+          "min": 1,
+          "max": 7,
+          "step": 1,
+          "minLabel": "Very dissatisfied",
+          "maxLabel": "Very satisfied"
+        },
+        {
+          "id": "glare_now",
+          "type": "singleChoice",
+          "prompt": "Are you experiencing glare discomfort right now?",
+          "required": true,
+          "options": ["Yes", "No"]
+        },
+        {
+          "id": "light_level_preference",
+          "type": "singleChoice",
+          "prompt": "Light level preference",
+          "help": "How would you describe the current light levels?",
+          "required": true,
+          "options": [
+            "I prefer much less light on my desk",
+            "I prefer less light on my desk",
+            "I prefer slightly less light on my desk",
+            "The amount of light is adequate now",
+            "I prefer slightly more light on my desk",
+            "I prefer more light on my desk",
+            "I prefer much more light on my desk"
+          ]
+        }
+      ]
+    },
+
+    {
+      "title": "IEQ (view)",
+      "subtitle": "Please look at the front window and the outside view through it.",
+      "questions": [
+        {
+          "id": "view_features_care_about",
+          "type": "text",
+          "prompt": "What view features do you care about most?",
+          "help": "Please write at least three features.",
+          "required": true,
+          "multiline": true,
+          "placeholder": "Example: trees, sky, distant buildings…"
+        },
+        {
+          "id": "view_visibility_maintained",
+          "type": "slider",
+          "prompt": "How well does the facade system maintain those view features?",
+          "help": "0 = none maintained, 100 = all maintained.",
+          "required": true,
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "minLabel": "None maintained (0)",
+          "maxLabel": "All maintained (100)"
+        },
+        {
+          "id": "view_amount_satisfaction",
+          "type": "slider",
+          "prompt": "Satisfaction with the amount of view",
+          "required": true,
+          "min": 1,
+          "max": 7,
+          "step": 1,
+          "minLabel": "Very dissatisfied",
+          "maxLabel": "Very satisfied"
+        },
+        {
+          "id": "view_overall_satisfaction",
+          "type": "slider",
+          "prompt": "Overall satisfaction with the view outside",
+          "required": true,
+          "min": 1,
+          "max": 7,
+          "step": 1,
+          "minLabel": "Very dissatisfied",
+          "maxLabel": "Very satisfied"
+        }
+      ]
+    }
+  ]
+}
