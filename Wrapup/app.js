@@ -243,7 +243,7 @@ function renderQuestion(q){
                   draggable="true"
                   data-qid="${escapeAttr(q.id)}"
                   data-index="${idx}">
-                <span class="rankHandle" aria-hidden="true">⋮⋮</span>
+                <span class="rankHandle" aria-hidden="true">⠿</span>
                 <span class="rankNum">${idx + 1}</span>
                 <span class="rankText">${escapeHTML(String(item))}</span>
               </li>
@@ -341,10 +341,9 @@ function reorderArray(arr, fromIdx, toIdx){
 
 function wireRankDnD(){
   const lists = document.querySelectorAll(".rankList");
+
   lists.forEach(list => {
     const qid = list.dataset.qid;
-
-    // Drag state per list
     let dragFrom = null;
 
     list.querySelectorAll(".rankItem").forEach(li => {
@@ -352,7 +351,6 @@ function wireRankDnD(){
         dragFrom = Number(li.dataset.index);
         li.classList.add("isDragging");
         e.dataTransfer.effectAllowed = "move";
-        // required for Firefox
         e.dataTransfer.setData("text/plain", String(dragFrom));
       });
 
@@ -365,11 +363,10 @@ function wireRankDnD(){
         e.preventDefault();
         e.dataTransfer.dropEffect = "move";
 
-        const toIdx = Number(li.dataset.index);
-        list.querySelectorAll(".rankItem").forEach(x => x.classList.remove("dropAbove", "dropBelow"));
-
         const rect = li.getBoundingClientRect();
         const isTopHalf = (e.clientY - rect.top) < rect.height / 2;
+
+        list.querySelectorAll(".rankItem").forEach(x => x.classList.remove("dropAbove", "dropBelow"));
         li.classList.add(isTopHalf ? "dropAbove" : "dropBelow");
       });
 
@@ -379,6 +376,7 @@ function wireRankDnD(){
 
       li.addEventListener("drop", (e) => {
         e.preventDefault();
+
         const fromIdx = dragFrom ?? Number(e.dataTransfer.getData("text/plain"));
         const toIdxRaw = Number(li.dataset.index);
 
@@ -397,6 +395,7 @@ function wireRankDnD(){
         }
 
         markFirstChanged(qid);
+
         // adjust target if moving downward because removing shifts indices
         const adjustedTo = (clampedTo > fromClamped) ? (clampedTo - 1) : clampedTo;
         state.answers[qid] = reorderArray(order, fromClamped, adjustedTo);
