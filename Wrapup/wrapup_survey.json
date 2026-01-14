@@ -1,0 +1,146 @@
+{
+  "surveyId": "solskin_wrapup",
+  "title": "Wrap-up Survey",
+  "version": "1.1",
+  "intro": "This is a wrap-up survey. Please answer once after you have completed all sessions.",
+  "pages": [
+    {
+      "title": "Wrap-up Survey",
+      "subtitle": "Participant information",
+      "questions": [
+        {
+          "id": "participant_number",
+          "type": "number",
+          "prompt": "Participant number",
+          "required": true,
+          "min": 1,
+          "step": 1,
+          "placeholder": "e.g., 1"
+        }
+      ]
+    },
+    {
+      "title": "Your experience with Solskin",
+      "subtitle": "General reflection",
+      "questions": [
+        {
+          "id": "patterns_interactions",
+          "type": "text",
+          "prompt": "Did you notice any patterns in your interactions with Solskin that you think it could learn from over time?",
+          "required": true,
+          "multiline": true,
+          "placeholder": "Write a short reflection..."
+        },
+        {
+          "id": "control_preference",
+          "type": "singleChoice",
+          "prompt": "After today's experience, how much control over Solskin's movements would you prefer to have?",
+          "required": true,
+          "options": [
+            "Less control (minimal control)",
+            "I am happy with the current control",
+            "More control (Full control)"
+          ]
+        },
+        {
+          "id": "overall_impression",
+          "type": "text",
+          "prompt": "What is your overall impression of Solskin after today's experiment?",
+          "required": true,
+          "multiline": true,
+          "placeholder": "Your overall impression..."
+        }
+      ]
+    },
+    {
+      "title": "Feature priorities",
+      "subtitle": "Drag to rank (top = most important)",
+      "questions": [
+        {
+          "id": "rank_like_features",
+          "type": "rank",
+          "prompt": "Please rank the items below by importance.",
+          "required": true,
+          "help": "Drag and drop to reorder. The top item is most important.",
+          "items": [
+            "Its movement",
+            "Its adaptability (controllability)",
+            "Its aesthetics",
+            "Its energy production"
+          ]
+        },
+        {
+          "id": "rank_future_features",
+          "type": "rank",
+          "prompt": "Which future features would you find most appealing?",
+          "required": true,
+          "help": "Drag and drop to reorder. The top item is most appealing.",
+          "items": [
+            "Have more fine control of the system",
+            "Smart algorithms (based on real-time learning)",
+            "Smart adaptation to outdoor weather conditions",
+            "Lower energy usage",
+            "User-defined settings",
+            "Higher energy production"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Wrap-up questions",
+      "subtitle": "Final reflections",
+      "questions": [
+        {
+          "id": "biggest_advantage",
+          "type": "text",
+          "prompt": "In your opinion, what is the biggest advantage of having a system like Solskin in a living or working environment?",
+          "required": true,
+          "multiline": true,
+          "placeholder": "Your answer..."
+        },
+        {
+          "id": "perspective_changed",
+          "type": "singleChoice",
+          "prompt": "Did your perspective about Solskin as a shading system change after the experiment?",
+          "required": true,
+          "options": ["Yes", "No", "Not sure"]
+        },
+        {
+          "id": "replace_venetian_blinds",
+          "type": "singleChoice",
+          "prompt": "Do you feel that Solskin could replace Venetian blinds?",
+          "required": true,
+          "options": ["Yes", "No", "It depends on situation"]
+        },
+        {
+          "id": "replace_fabric_rollershading",
+          "type": "singleChoice",
+          "prompt": "Do you feel that Solskin could replace fabric rollershading?",
+          "required": true,
+          "options": ["Yes", "No", "It depends on situation"]
+        },
+        {
+          "id": "replace_curtain",
+          "type": "singleChoice",
+          "prompt": "Do you feel that Solskin could replace curtain?",
+          "required": true,
+          "options": ["Yes", "No", "It depends on situation"]
+        },
+        {
+          "id": "replace_electrochromic",
+          "type": "singleChoice",
+          "prompt": "Do you feel that Solskin could replace electrochromic glazing?",
+          "required": true,
+          "options": ["Yes", "No", "It depends on situation"]
+        },
+        {
+          "id": "manual_adjust_frequency",
+          "type": "singleChoice",
+          "prompt": "Now that you interacted with Solskin, how often would you want to manually adjust its settings, assuming it was actively learning your preferences?",
+          "required": true,
+          "options": ["Only when needed", "Throughout the day"]
+        }
+      ]
+    }
+  ]
+}
