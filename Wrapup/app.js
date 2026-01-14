@@ -1,13 +1,14 @@
 /* Offline Survey Runner (Wrap-up)
-   - Participant selects wrapup survey JSON file (offline friendly)
-   - Renders page-by-page
-   - Progress bar
-   - Supports: number, text, singleChoice, slider, likert
-   - Timing per question: shownAtISO, firstChangedAtISO, answeredAtISO, timeSpentMs
+   - Offline: participant loads survey.json via file picker
+   - Page-by-page, progress bar, local download at end
+   - Supported types:
+       number, text, singleChoice, slider, likert, rank (drag-and-drop)
+   - Timing per question:
+       shownAtISO, firstChangedAtISO, answeredAtISO, timeSpentMs
 
-   Wrap-up changes:
+   Wrap-up specifics:
    - Only participant_number (no session_number)
-   - Finish screen: Upload to Polybox button (plus optional email fallback)
+   - Finish screen: Polybox upload button + email fallback
 */
 
 const POLYBOX_UPLOAD_URL = "https://polybox.ethz.ch/index.php/s/2HSKSHKn7i7QSTe";
@@ -17,9 +18,9 @@ const state = {
   survey: null,
   pageIndex: 0,
   answers: {},
-  timing: {},
-  perfShownAt: {},
-  perfFirstChangedAt: {},
+  timing: {},            // { qid: { shownAtISO, firstChangedAtISO, answeredAtISO, timeSpentMs } }
+  perfShownAt: {},       // { qid: perfNow }
+  perfFirstChangedAt: {},// { qid: perfNow }
   startedAtISO: null,
   endedAtISO: null,
 
@@ -37,6 +38,7 @@ const $progressText = document.getElementById("progressText");
 
 function nowISO(){ return new Date().toISOString(); }
 
+// ---------- timing ----------
 function ensureTimingShown(qid){
   if (!state.timing[qid]) state.timing[qid] = {};
   if (!state.timing[qid].shownAtISO){
@@ -53,10 +55,17 @@ function markFirstChanged(qid){
   }
 }
 
+function isAnsweredValue(a){
+  if (a === undefined || a === null) return false;
+  if (Array.isArray(a)) return a.length > 0;
+  if (a === "") return false;
+  if (typeof a === "number" && Number.isNaN(a)) return false;
+  return true;
+}
+
 function finalizeQuestionTime(qid){
   const a = state.answers[qid];
-  const hasAnswer = !(a === undefined || a === null || a === "" || (typeof a === "number" && Number.isNaN(a)));
-  if (!hasAnswer) return;
+  if (!isAnsweredValue(a)) return;
 
   if (!state.timing[qid]) state.timing[qid] = {};
   if (!state.timing[qid].shownAtISO) ensureTimingShown(qid);
@@ -68,6 +77,7 @@ function finalizeQuestionTime(qid){
   }
 }
 
+// ---------- helpers ----------
 function downloadJSON(filename, obj){
   const blob = new Blob([JSON.stringify(obj, null, 2)], { type: "application/json" });
   const url = URL.createObjectURL(blob);
@@ -103,6 +113,7 @@ function updateProgress(){
   $progressText.textContent = `${pct}%`;
 }
 
+// ---------- load screen ----------
 function renderLoadScreen(errMsg = null){
   $meta.textContent = `Timezone: ${state.tz}`;
   updateProgress();
@@ -119,7 +130,7 @@ function renderLoadScreen(errMsg = null){
 
     <div class="small">
       Tip: This survey does not upload anything automatically.
-      It downloads a results file at the end.
+      It only downloads a results file at the end.
     </div>
   `;
 
@@ -152,10 +163,10 @@ function loadSurvey(survey){
   state.timing = {};
   state.perfShownAt = {};
   state.perfFirstChangedAt = {};
-
   render();
 }
 
+// ---------- main render ----------
 function render(){
   const s = state.survey;
   const page = s.pages[state.pageIndex];
@@ -167,7 +178,11 @@ function render(){
   $meta.textContent = `${s.title || "Survey"} • Page ${state.pageIndex + 1}/${s.pages.length}${ps} • ${state.tz}`;
   updateProgress();
 
-  for (const q of vq) ensureTimingShown(q.id);
+  // mark shown times + initialize rank answers when first shown
+  for (const q of vq) {
+    ensureTimingShown(q.id);
+    if (q.type === "rank") ensureRankInit(q);
+  }
 
   $card.innerHTML = `
     <h1 class="h1">${escapeHTML(page.title || s.title || "Survey")}</h1>
@@ -177,6 +192,9 @@ function render(){
     </div>
     <div id="err" class="err" style="display:none"></div>
   `;
+
+  // wire DnD after HTML is in DOM
+  wireRankDnD();
 
   $btnBack.disabled = state.pageIndex === 0;
   $btnNext.disabled = false;
@@ -206,6 +224,31 @@ function renderQuestion(q){
               </label>
             `;
           }).join("")}
+        </div>
+      </div>
+    `;
+  }
+
+  if (q.type === "rank"){
+    const order = Array.isArray(val) ? val : (q.items || []);
+    return `
+      <div class="q" data-qid="${escapeAttr(q.id)}">
+        <label class="title">${escapeHTML(q.prompt)} ${required}</label>
+        ${q.help ? `<div class="help">${escapeHTML(q.help)}</div>` : ""}
+        <div class="rankWrap">
+          <div class="rankHint">Drag to reorder • Top = most important</div>
+          <ul class="rankList" data-qid="${escapeAttr(q.id)}" aria-label="Ranking list">
+            ${order.map((item, idx) => `
+              <li class="rankItem"
+                  draggable="true"
+                  data-qid="${escapeAttr(q.id)}"
+                  data-index="${idx}">
+                <span class="rankHandle" aria-hidden="true">⋮⋮</span>
+                <span class="rankNum">${idx + 1}</span>
+                <span class="rankText">${escapeHTML(String(item))}</span>
+              </li>
+            `).join("")}
+          </ul>
         </div>
       </div>
     `;
@@ -282,20 +325,110 @@ function renderQuestion(q){
   `;
 }
 
-/* ---------- Answer handlers ---------- */
+// ---------- rank helpers ----------
+function ensureRankInit(q){
+  if (state.answers[q.id] !== undefined) return;
+  const items = Array.isArray(q.items) ? q.items : [];
+  state.answers[q.id] = items.slice(); // default order = given order
+}
+
+function reorderArray(arr, fromIdx, toIdx){
+  const a = arr.slice();
+  const [moved] = a.splice(fromIdx, 1);
+  a.splice(toIdx, 0, moved);
+  return a;
+}
+
+function wireRankDnD(){
+  const lists = document.querySelectorAll(".rankList");
+  lists.forEach(list => {
+    const qid = list.dataset.qid;
+
+    // Drag state per list
+    let dragFrom = null;
+
+    list.querySelectorAll(".rankItem").forEach(li => {
+      li.addEventListener("dragstart", (e) => {
+        dragFrom = Number(li.dataset.index);
+        li.classList.add("isDragging");
+        e.dataTransfer.effectAllowed = "move";
+        // required for Firefox
+        e.dataTransfer.setData("text/plain", String(dragFrom));
+      });
+
+      li.addEventListener("dragend", () => {
+        li.classList.remove("isDragging");
+        list.querySelectorAll(".rankItem").forEach(x => x.classList.remove("dropAbove", "dropBelow"));
+      });
+
+      li.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = "move";
+
+        const toIdx = Number(li.dataset.index);
+        list.querySelectorAll(".rankItem").forEach(x => x.classList.remove("dropAbove", "dropBelow"));
+
+        const rect = li.getBoundingClientRect();
+        const isTopHalf = (e.clientY - rect.top) < rect.height / 2;
+        li.classList.add(isTopHalf ? "dropAbove" : "dropBelow");
+      });
+
+      li.addEventListener("dragleave", () => {
+        li.classList.remove("dropAbove", "dropBelow");
+      });
+
+      li.addEventListener("drop", (e) => {
+        e.preventDefault();
+        const fromIdx = dragFrom ?? Number(e.dataTransfer.getData("text/plain"));
+        const toIdxRaw = Number(li.dataset.index);
+
+        const rect = li.getBoundingClientRect();
+        const isTopHalf = (e.clientY - rect.top) < rect.height / 2;
+        const toIdx = isTopHalf ? toIdxRaw : (toIdxRaw + 1);
+
+        const order = Array.isArray(state.answers[qid]) ? state.answers[qid] : [];
+        const clampedTo = Math.max(0, Math.min(order.length, toIdx));
+        const fromClamped = Math.max(0, Math.min(order.length - 1, fromIdx));
+
+        // dropping to same position -> ignore
+        if (fromClamped === clampedTo || fromClamped + 1 === clampedTo) {
+          render();
+          return;
+        }
+
+        markFirstChanged(qid);
+        // adjust target if moving downward because removing shifts indices
+        const adjustedTo = (clampedTo > fromClamped) ? (clampedTo - 1) : clampedTo;
+        state.answers[qid] = reorderArray(order, fromClamped, adjustedTo);
+        render();
+      });
+    });
+  });
+}
+
+// ---------- answer handlers ----------
 window.onSingleChoice = (qid, value) => { markFirstChanged(qid); state.answers[qid] = value; render(); };
 window.onSlider       = (qid, value, valueSpan) => { markFirstChanged(qid); state.answers[qid] = value; if (valueSpan) valueSpan.textContent = String(value); };
 window.onText         = (qid, value) => { markFirstChanged(qid); state.answers[qid] = value; };
 window.onNumber       = (qid, value) => { markFirstChanged(qid); state.answers[qid] = (value === "") ? "" : Number(value); };
 
-/* ---------------- Nav ---------------- */
+// ---------- nav + validation ----------
 function validatePage(){
   const missing = [];
+
   for (const q of visibleQuestionsOnPage()){
     if (!q.required) continue;
+
     const a = state.answers[q.id];
-    const empty = (a === undefined || a === null || a === "" || (typeof a === "number" && Number.isNaN(a)));
-    if (empty) missing.push(q.id);
+
+    // rank must have all items present
+    if (q.type === "rank"){
+      const n = Array.isArray(q.items) ? q.items.length : 0;
+      if (!Array.isArray(a) || a.length !== n) missing.push(q.id);
+      continue;
+    }
+
+    if (!isAnsweredValue(a)) missing.push(q.id);
   }
 
   if (missing.length){
@@ -355,7 +488,6 @@ $btnNext.addEventListener("click", () => {
 
   downloadJSON(filename, payload);
 
-  // Optional email fallback (no auto-attach; user attaches file)
   const subject = encodeURIComponent(`Solskin WRAP-UP survey — P${safeParticipant}`);
   const body = encodeURIComponent(
 `Hello,
@@ -395,12 +527,13 @@ Thank you.`
       On Polybox, choose the downloaded JSON file (<code>${escapeHTML(filename)}</code>) and upload it.
     </p>
   `;
+
   $btnBack.disabled = true;
   $btnNext.disabled = true;
   updateProgress();
 });
 
-/* ---------------- Utilities ---------------- */
+// ---------- utilities ----------
 function escapeHTML(s){
   return String(s).replace(/[&<>"']/g, c => ({
     "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;", "'":"&#39;"
@@ -409,5 +542,5 @@ function escapeHTML(s){
 function escapeAttr(s){ return escapeHTML(s).replace(/`/g, "&#96;"); }
 function escapeJS(s){ return String(s).replace(/\\/g,"\\\\").replace(/'/g,"\\'"); }
 
-/* ---------------- Boot ---------------- */
+// ---------- boot ----------
 renderLoadScreen();
