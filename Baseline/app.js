@@ -7,7 +7,7 @@
    - End: download JSON + show Polybox upload link (optional)
 */
 
-const POLYBOX_UPLOAD_URL = "https://polybox.ethz.ch/index.php/s/2HSKSHKn7i7QSTe";
+const POLYBOX_UPLOAD_URL = "https://polybox.ethz.ch/index.php/s/69JSKYj75Yn86Bc";
 const EMAIL_TO = "kim@arch.ethz.ch";
 
 const state = {
