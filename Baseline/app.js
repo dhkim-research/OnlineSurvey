@@ -475,6 +475,31 @@ window.onNumber = (qid, value) => {
 /* ---------- Nav / Validation ---------- */
 
 function validatePage(){
+  const $err = document.getElementById("err");
+  if (!$err) return true;
+
+  // --- Consent gate (Start page only) ---
+  // If they selected "No", do not allow continuing.
+  // (Assumes consent question is on pageIndex 0, as in your JSON.)
+  if (state.pageIndex === 0){
+    const consent = state.answers["consent_obtained"];
+
+    // Only block when they explicitly chose "No".
+    // If it's missing, it will be caught by required validation below.
+    if (consent === "No"){
+      $err.style.display = "block";
+      $err.textContent =
+        "You selected “No” for consent. Please check again whether you consent to participate in this study to proceed.";
+
+      // Optional: bring the consent question into view
+      const el = document.querySelector('[data-qid="consent_obtained"]');
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+
+      return false;
+    }
+  }
+
+  // --- Existing required validation (unchanged) ---
   const missing = [];
   for (const q of visibleQuestionsOnPage()){
     if (!q.required) continue;
@@ -493,11 +518,14 @@ function validatePage(){
   }
 
   if (missing.length){
-    const $err = document.getElementById("err");
     $err.style.display = "block";
     $err.textContent = "Please answer all required questions (*) before continuing.";
     return false;
   }
+
+  // If everything is fine, hide error
+  $err.style.display = "none";
+  $err.textContent = "";
   return true;
 }
 
