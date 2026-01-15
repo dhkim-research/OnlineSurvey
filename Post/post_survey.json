@@ -2,7 +2,7 @@
   "surveyId": "main-survey",
   "title": "Main Survey",
   "version": "1.1.1",
-  "intro": "Please answer the below questions based on your experience in the last session.",
+  "intro": "Please answer the questions below based on your experience in the last session.",
   "pages": [
     {
       "id": "participant",
@@ -122,7 +122,7 @@
         {
           "id": "prefer_temp_change",
           "type": "likert",
-          "prompt": "During the last session did you prefer to be...?",
+          "prompt": "During the last session, would you have preferred warmer or coller thermal conditions?",
           "required": true,
           "points": 3,
           "labels": ["Cooler", "Without change", "Warmer"],
@@ -131,16 +131,16 @@
         {
           "id": "prefer_air_movement",
           "type": "likert",
-          "prompt": "During the last session did you prefer...?",
+          "prompt": "During the last session, would you have preferred more or less air movement?",
           "required": true,
           "points": 3,
-          "labels": ["Less air movement", "No change", "More air movement"],
-          "values": ["Less air movement", "No change", "More air movement"]
+          "labels": ["Less", "No change", "More"],
+          "values": ["Less", "No change", "More"]
         },
         {
           "id": "thermal_pleasantness",
           "type": "likert",
-          "prompt": "During the last session, did you find the current thermal environment...?",
+          "prompt": "During the last session, how pleasant was the thermal environment?",
           "required": true,
           "points": 7,
           "labels": [
@@ -165,7 +165,7 @@
         {
           "id": "thermal_acceptability",
           "type": "likert",
-          "prompt": "During the last session, did you find the current thermal environment...?",
+          "prompt": "During the last session, how acceptable was the thermal environment?",
           "required": true,
           "points": 5,
           "labels": [
@@ -192,7 +192,7 @@
         {
           "id": "lighting_satisfaction",
           "type": "likert",
-          "prompt": "How satisfied were you with the quality of lighting in this space during the last session?",
+          "prompt": "During the last session, how satisfied with the lighting quality were you?",
           "required": true,
           "points": 7,
           "labels": [
@@ -236,26 +236,26 @@
         {
           "id": "light_level_preference",
           "type": "likert",
-          "prompt": "How would you describe the current light levels?",
+          "prompt": "During the last session, would you have preferred more or less light on your desk?",
           "required": true,
           "points": 7,
           "labels": [
-            "I prefer much less light on my desk",
-            "I prefer less light on my desk",
-            "I prefer slightly less light on my desk",
-            "I feel that the amount of light is adequate now",
-            "I prefer slightly more light on my desk",
-            "I prefer more light on my desk",
-            "I prefer much more light on my desk"
+            "Much less",
+            "Less",
+            "Slightly less",
+            "No change - the amount was adequate",
+            "Slightly more",
+            "More",
+            "Much more"
           ],
           "values": [
-            "I prefer much less light on my desk",
-            "I prefer less light on my desk",
-            "I prefer slightly less light on my desk",
-            "I feel that the amount of light is adequate now",
-            "I prefer slightly more light on my desk",
-            "I prefer more light on my desk",
-            "I prefer much more light on my desk"
+            "Much less",
+            "Less",
+            "Slightly less",
+            "No change - the amount was adequate",
+            "Slightly more",
+            "More",
+            "Much more"
           ]
         },
 
@@ -274,7 +274,7 @@
         {
           "id": "daylight_well_lit",
           "type": "likert",
-          "prompt": "Would you say the room was well lit by daylight during the last session?",
+          "prompt": "During the last session, would you say the room received enough daylight?",
           "required": true,
           "points": 2,
           "labels": ["Yes", "No"],
@@ -328,7 +328,7 @@
         {
           "id": "overall_comfort",
           "type": "likert",
-          "prompt": "How woud you rate the overall indoor environmental comfort during the last session?",
+          "prompt": "Overall, during the last session, how comfortable was the indoor environment?",
           "required": true,
           "points": 4,
           "labels": ["Very comfortable", "Comfortable", "Uncomfortable", "Very uncomfortable"],
@@ -345,15 +345,15 @@
         {
           "id": "disturbed_anything",
           "type": "text",
-          "prompt": "Is there anything about the physical environment that disturbed you? (Answer 'No', if you are not disturbed by anything)",
+          "prompt": "Is there anything about the physical environment that disturbed you?",
           "required": true,
           "multiline": true,
-          "placeholder": "Type 'No' if nothing disturbed you"
+          "placeholder": "Answer 'No' if nothing disturbed you"
         },
         {
           "id": "desired_changes",
           "type": "text",
-          "prompt": "Assume that you have to work all day from this space and full control on heating/cooling system and the facade system as well as desk layout, would you like any changes?",
+          "prompt": "Assuming that you have to work all day from this space and have full control over heating/cooling, the facade and the desk layout, would you change anything?",
           "required": false,
           "multiline": true,
           "placeholder": "Optional"
