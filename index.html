@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Solskin Surveys</title>
+  <title>Solskin AI & ETH Zurich Phase II study </title>
   <style>
     :root{
       --bg:#ffffff;
@@ -52,15 +52,22 @@
       background:var(--card);
       box-shadow: var(--shadow);
       padding:14px 14px 12px;
-      text-decoration:none;
       color:inherit;
       display:block;
-      transition: transform .06s ease, border-color .12s ease;
     }
-    .card:hover{
-      border-color: rgba(201,164,106,.9);
-      transform: translateY(-1px);
+    .cardTop{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
     }
+    .cardMainLink{
+      text-decoration:none;
+      color:inherit;
+      flex:1;
+      min-width:0;
+    }
+    .card:hover{border-color: rgba(201,164,106,.65)}
     .kicker{
       display:inline-flex;
       align-items:center;
@@ -81,6 +88,21 @@
     }
     .title{font-weight:900; font-size:15px; margin:0 0 6px}
     .desc{margin:0; color:var(--muted); font-size:13px}
+
+    .dlBtn{
+      text-decoration:none;
+      border:1px solid var(--line);
+      background:#fff;
+      color:var(--text);
+      border-radius:999px;
+      padding:7px 10px;
+      font-size:12px;
+      font-weight:800;
+      white-space:nowrap;
+      flex:0 0 auto;
+    }
+    .dlBtn:hover{border-color: rgba(37,99,235,.45); box-shadow: 0 0 0 3px rgba(37,99,235,.08);}
+
     .note{
       margin-top:14px;
       border:1px dashed var(--line);
@@ -107,39 +129,71 @@
     </div>
 
     <div class="grid">
-      <a class="card" href="./Baseline/">
-        <div class="kicker"><span class="badge">Once</span></div>
-        <p class="title">Baseline survey</p>
-        <p class="desc">Complete at the start of the experiment.</p>
-      </a>
 
-      <a class="card" href="./Live/">
-        <div class="kicker"><span class="badge">Every session</span></div>
-        <p class="title">Live in-session survey</p>
-        <p class="desc">Keep open during the session and update when you notice a change.</p>
-      </a>
+      <!-- Baseline -->
+      <div class="card">
+        <div class="cardTop">
+          <a class="cardMainLink" href="./Baseline/">
+            <div class="kicker"><span class="badge">Once</span></div>
+            <p class="title">Baseline survey</p>
+            <p class="desc">Complete at the start of the experiment.</p>
+          </a>
+          <a class="dlBtn" href="./Baseline/base_survey.json" download>Download JSON</a>
+        </div>
+      </div>
 
-      <a class="card" href="./Post/">
-        <div class="kicker"><span class="badge">Every session</span></div>
-        <p class="title">Post-session survey</p>
-        <p class="desc">Complete right after finishing the session.</p>
-      </a>
+      <!-- Live -->
+      <div class="card">
+        <div class="cardTop">
+          <a class="cardMainLink" href="./Live/">
+            <div class="kicker"><span class="badge">Every session</span></div>
+            <p class="title">Live in-session survey</p>
+            <p class="desc">Keep open during the session and update when you notice a change.</p>
+          </a>
+          <a class="dlBtn" href="./Live/live_survey.json" download>Download JSON</a>
+        </div>
+      </div>
 
-      <a class="card" href="./Compare/">
-        <div class="kicker"><span class="badge">Once</span></div>
-        <p class="title">Pairwise comparison survey</p>
-        <p class="desc">Complete after all sessions and before the wrap-up survey.</p>
-      </a>
+      <!-- Post -->
+      <div class="card">
+        <div class="cardTop">
+          <a class="cardMainLink" href="./Post/">
+            <div class="kicker"><span class="badge">Every session</span></div>
+            <p class="title">Post-session survey</p>
+            <p class="desc">Complete right after finishing the session.</p>
+          </a>
+          <a class="dlBtn" href="./Post/post_survey.json" download>Download JSON</a>
+        </div>
+      </div>
 
-      <a class="card" href="./Wrapup/">
-        <div class="kicker"><span class="badge">Once</span></div>
-        <p class="title">Wrap-up survey</p>
-        <p class="desc">Complete at the end of all sessions.</p>
-      </a>
+      <!-- Compare -->
+      <div class="card">
+        <div class="cardTop">
+          <a class="cardMainLink" href="./Compare/">
+            <div class="kicker"><span class="badge">Once</span></div>
+            <p class="title">Pairwise comparison survey</p>
+            <p class="desc">Complete after all sessions and before the wrap-up survey.</p>
+          </a>
+          <a class="dlBtn" href="./Compare/compare.json" download>Download JSON</a>
+        </div>
+      </div>
+
+      <!-- Wrap-up -->
+      <div class="card">
+        <div class="cardTop">
+          <a class="cardMainLink" href="./Wrapup/">
+            <div class="kicker"><span class="badge">Once</span></div>
+            <p class="title">Wrap-up survey</p>
+            <p class="desc">Complete at the end of all sessions.</p>
+          </a>
+          <a class="dlBtn" href="./Wrapup/wrapup_survey.json" download>Download JSON</a>
+        </div>
+      </div>
+
     </div>
 
     <div class="note">
-      <strong>Important:</strong> Your responses are saved only when a results file is downloaded at the end of the survey.  
+      <strong>Important:</strong> Your responses are saved only when a results file is downloaded at the end of the survey.
       After downloading, please upload the file using the provided Polybox link on the final page.
     </div>
   </div>
