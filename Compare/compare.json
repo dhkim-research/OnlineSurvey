@@ -1,8 +1,8 @@
 {
   "surveyId": "compare-survey",
   "title": "Pairwise Comparison",
-  "version": "1.0.0",
-  "intro": "Keep this tab open during the comparisons. For each comparison: tell the researcher when you are ready, press Start, experience Mode 1 (2 min) followed immediately by Mode 2 (2 min), then answer which one matched your comfort expectations better.",
+  "version": "1.0.2",
+  "intro": "Keep this tab open during the comparisons. For each comparison: tell the researcher when you are ready, press Start, experience Mode 1 (2 min) followed immediately by Mode 2 (2 min), then answer the questions.",
   "pages": [
     {
       "id": "participant",
@@ -19,22 +19,6 @@
         }
       ]
     },
-    {
-      "id": "session",
-      "title": "Session",
-      "questions": [
-        {
-          "id": "session_number",
-          "type": "number",
-          "prompt": "Session Number",
-          "required": true,
-          "min": 1,
-          "step": 1,
-          "placeholder": "e.g., 3"
-        }
-      ]
-    },
-
     {
       "id": "cmp1",
       "title": "Comparison 1 / 3",
@@ -54,23 +38,32 @@
         {
           "id": "cmp1_preference",
           "type": "likert",
-          "prompt": "Which exposure matched your comfort expectations better?",
+          "prompt": "Which one did you prefer for your comfort?",
           "required": true,
-          "points": 3,
-          "labels": ["First one", "Second one", "No difference / I don't know"],
-          "values": ["First one", "Second one", "No difference / I don't know"]
+          "points": 4,
+          "labels": [
+            "First one",
+            "Second one",
+            "No difference / I don't know",
+            "Neither (both uncomfortable)"
+          ],
+          "values": [
+            "First one",
+            "Second one",
+            "No difference / I don't know",
+            "Neither (both uncomfortable)"
+          ]
         },
         {
           "id": "cmp1_reason",
           "type": "text",
-          "prompt": "Briefly explain why you chose the above answer.",
+          "prompt": "Briefly explain your choice (optional).",
           "required": false,
           "multiline": true,
           "placeholder": "Optional (brief)"
         }
       ]
     },
-
     {
       "id": "cmp2",
       "title": "Comparison 2 / 3",
@@ -90,23 +83,32 @@
         {
           "id": "cmp2_preference",
           "type": "likert",
-          "prompt": "Which exposure matched your comfort expectations better?",
+          "prompt": "Which one did you prefer for your comfort?",
           "required": true,
-          "points": 3,
-          "labels": ["First one", "Second one", "No difference / I don't know"],
-          "values": ["First one", "Second one", "No difference / I don't know"]
+          "points": 4,
+          "labels": [
+            "First one",
+            "Second one",
+            "No difference / I don't know",
+            "Neither (both uncomfortable)"
+          ],
+          "values": [
+            "First one",
+            "Second one",
+            "No difference / I don't know",
+            "Neither (both uncomfortable)"
+          ]
         },
         {
           "id": "cmp2_reason",
           "type": "text",
-          "prompt": "Briefly explain why you chose the above answer.",
+          "prompt": "Briefly explain your choice (optional).",
           "required": false,
           "multiline": true,
           "placeholder": "Optional (brief)"
         }
       ]
     },
-
     {
       "id": "cmp3",
       "title": "Comparison 3 / 3",
@@ -126,16 +128,26 @@
         {
           "id": "cmp3_preference",
           "type": "likert",
-          "prompt": "Which exposure matched your comfort expectations better?",
+          "prompt": "Which one did you prefer for your comfort?",
           "required": true,
-          "points": 3,
-          "labels": ["First one", "Second one", "No difference / I don't know"],
-          "values": ["First one", "Second one", "No difference / I don't know"]
+          "points": 4,
+          "labels": [
+            "First one",
+            "Second one",
+            "No difference / I don't know",
+            "Neither (both uncomfortable)"
+          ],
+          "values": [
+            "First one",
+            "Second one",
+            "No difference / I don't know",
+            "Neither (both uncomfortable)"
+          ]
         },
         {
           "id": "cmp3_reason",
           "type": "text",
-          "prompt": "Briefly explain why you chose the above answer.",
+          "prompt": "Briefly explain your choice (optional).",
           "required": false,
           "multiline": true,
           "placeholder": "Optional (brief)"
