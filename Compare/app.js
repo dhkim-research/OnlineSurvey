@@ -467,9 +467,6 @@ function renderQuestion(q){
             <button type="button" class="btn" data-timer-start="${escapeAttr(q.id)}" ${isDone ? "disabled" : ""}>
               Start
             </button>
-            <button type="button" class="btn ghost" data-timer-reset="${escapeAttr(q.id)}" ${isDone ? "" : "disabled"}>
-              Reset
-            </button>
           </div>
         </div>
       </div>
