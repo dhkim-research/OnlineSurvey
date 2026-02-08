@@ -5,17 +5,143 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Solskin Surveys</title>
   <style>
-    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; margin:40px; line-height:1.4}
-    a{display:block; padding:12px 14px; border:1px solid #ddd; border-radius:12px; text-decoration:none; margin:10px 0; max-width:420px}
-    a:hover{background:#fafafa}
+    :root{
+      --bg:#ffffff;
+      --text:#111827;
+      --muted:#6b7280;
+      --line:#e5e7eb;
+      --card:#ffffff;
+      --accent:#c9a46a;
+      --accent2:#2563eb;
+      --shadow: 0 10px 20px rgba(17,24,39,.08);
+    }
+    *{box-sizing:border-box}
+    body{
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      margin:0;
+      padding:32px 16px;
+      background:var(--bg);
+      color:var(--text);
+      line-height:1.45;
+    }
+    .wrap{max-width:900px; margin:0 auto}
+    .header{
+      display:flex; align-items:center; justify-content:space-between; gap:14px;
+      padding:14px 16px;
+      border:1px solid var(--line);
+      border-radius:16px;
+      background:rgba(255,255,255,.92);
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow);
+    }
+    .logos{display:flex; align-items:center; gap:12px}
+    .logo{height:28px; width:auto; object-fit:contain}
+    .logo.eth{height:26px}
+    .logo.solskin{height:30px}
+    h1{font-size:18px; margin:0}
+    .sub{margin:6px 0 0; color:var(--muted); font-size:13px}
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap:12px;
+      margin-top:16px;
+    }
+    .card{
+      border:1px solid var(--line);
+      border-radius:16px;
+      background:var(--card);
+      box-shadow: var(--shadow);
+      padding:14px 14px 12px;
+      text-decoration:none;
+      color:inherit;
+      display:block;
+      transition: transform .06s ease, border-color .12s ease;
+    }
+    .card:hover{
+      border-color: rgba(201,164,106,.9);
+      transform: translateY(-1px);
+    }
+    .kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size:12px;
+      color:var(--muted);
+      margin-bottom:8px;
+    }
+    .badge{
+      font-size:11px;
+      padding:3px 8px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:#fafafa;
+      color:var(--muted);
+      font-weight:700;
+      white-space:nowrap;
+    }
+    .title{font-weight:900; font-size:15px; margin:0 0 6px}
+    .desc{margin:0; color:var(--muted); font-size:13px}
+    .note{
+      margin-top:14px;
+      border:1px dashed var(--line);
+      border-radius:16px;
+      padding:12px 14px;
+      color:var(--muted);
+      font-size:12px;
+      background:#fff;
+    }
+    .note strong{color:var(--text)}
   </style>
 </head>
 <body>
-  <h1>Solskin Survey Links</h1>
-  <a href="./Live/">Live in-session survey</a>
-  <a href="./Post/">Post-session survey</a>
-  <a href="./Compare/">Comparison survey</a>
-  <a href="./Wrapup/">Wrap-up survey (end of all sessions)</a>
-  <a href="./Baseline/">Baseline survey (start of the experiment)</a>
+  <div class="wrap">
+    <div class="header">
+      <div>
+        <h1>Solskin Survey Links</h1>
+        <div class="sub">Open the survey you need. Live and Post are completed after <strong>each session</strong>.</div>
+      </div>
+      <div class="logos" aria-hidden="true">
+        <img class="logo eth" src="./Assets/eth_logo.jpg" alt="ETH Zürich" />
+        <img class="logo solskin" src="./Assets/solskin_logo.png" alt="Solskin" />
+      </div>
+    </div>
+
+    <div class="grid">
+      <a class="card" href="./Baseline/">
+        <div class="kicker"><span class="badge">Once</span></div>
+        <p class="title">Baseline survey</p>
+        <p class="desc">Complete at the start of the experiment.</p>
+      </a>
+
+      <a class="card" href="./Live/">
+        <div class="kicker"><span class="badge">Every session</span></div>
+        <p class="title">Live in-session survey</p>
+        <p class="desc">Keep open during the session and update when you notice a change.</p>
+      </a>
+
+      <a class="card" href="./Post/">
+        <div class="kicker"><span class="badge">Every session</span></div>
+        <p class="title">Post-session survey</p>
+        <p class="desc">Complete right after finishing the session.</p>
+      </a>
+
+      <a class="card" href="./Compare/">
+        <div class="kicker"><span class="badge">Once</span></div>
+        <p class="title">Pairwise comparison survey</p>
+        <p class="desc">Complete after all sessions and before the wrap-up survey.</p>
+      </a>
+
+      <a class="card" href="./Wrapup/">
+        <div class="kicker"><span class="badge">Once</span></div>
+        <p class="title">Wrap-up survey</p>
+        <p class="desc">Complete at the end of all sessions.</p>
+      </a>
+    </div>
+
+    <div class="note">
+      <strong>Important:</strong> Your responses are saved only when a results file is downloaded at the end of the survey.  
+      After downloading, please upload the file using the provided Polybox link on the final page.
+    </div>
+  </div>
 </body>
 </html>
