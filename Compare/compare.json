@@ -1,0 +1,146 @@
+{
+  "surveyId": "compare-survey",
+  "title": "Pairwise Comparison",
+  "version": "1.0.0",
+  "intro": "Keep this tab open during the comparisons. For each comparison: tell the researcher when you are ready, press Start, experience Mode 1 (2 min) followed immediately by Mode 2 (2 min), then answer which one matched your comfort expectations better.",
+  "pages": [
+    {
+      "id": "participant",
+      "title": "Participant",
+      "questions": [
+        {
+          "id": "participant_number",
+          "type": "number",
+          "prompt": "Participant Number",
+          "required": true,
+          "min": 1,
+          "step": 1,
+          "placeholder": "e.g., 12"
+        }
+      ]
+    },
+    {
+      "id": "session",
+      "title": "Session",
+      "questions": [
+        {
+          "id": "session_number",
+          "type": "number",
+          "prompt": "Session Number",
+          "required": true,
+          "min": 1,
+          "step": 1,
+          "placeholder": "e.g., 3"
+        }
+      ]
+    },
+
+    {
+      "id": "cmp1",
+      "title": "Comparison 1 / 3",
+      "subtitle": "Please tell the researcher when you are ready to start the first comparison.",
+      "questions": [
+        {
+          "id": "cmp1_timer",
+          "type": "timer",
+          "prompt": "Exposure timer (Mode 1 → Mode 2)",
+          "help": "When you are ready, press Start. You will experience two consecutive 2-minute exposures. After the timer finishes, answer the questions below.",
+          "required": true,
+          "phases": [
+            { "label": "Mode 1", "seconds": 120 },
+            { "label": "Mode 2", "seconds": 120 }
+          ]
+        },
+        {
+          "id": "cmp1_preference",
+          "type": "likert",
+          "prompt": "Which exposure matched your comfort expectations better?",
+          "required": true,
+          "points": 3,
+          "labels": ["First one", "Second one", "No difference / I don't know"],
+          "values": ["First one", "Second one", "No difference / I don't know"]
+        },
+        {
+          "id": "cmp1_reason",
+          "type": "text",
+          "prompt": "Briefly explain why you chose the above answer.",
+          "required": false,
+          "multiline": true,
+          "placeholder": "Optional (brief)"
+        }
+      ]
+    },
+
+    {
+      "id": "cmp2",
+      "title": "Comparison 2 / 3",
+      "subtitle": "Please tell the researcher when you are ready to start the second comparison.",
+      "questions": [
+        {
+          "id": "cmp2_timer",
+          "type": "timer",
+          "prompt": "Exposure timer (Mode 1 → Mode 2)",
+          "help": "When you are ready, press Start. You will experience two consecutive 2-minute exposures. After the timer finishes, answer the questions below.",
+          "required": true,
+          "phases": [
+            { "label": "Mode 1", "seconds": 120 },
+            { "label": "Mode 2", "seconds": 120 }
+          ]
+        },
+        {
+          "id": "cmp2_preference",
+          "type": "likert",
+          "prompt": "Which exposure matched your comfort expectations better?",
+          "required": true,
+          "points": 3,
+          "labels": ["First one", "Second one", "No difference / I don't know"],
+          "values": ["First one", "Second one", "No difference / I don't know"]
+        },
+        {
+          "id": "cmp2_reason",
+          "type": "text",
+          "prompt": "Briefly explain why you chose the above answer.",
+          "required": false,
+          "multiline": true,
+          "placeholder": "Optional (brief)"
+        }
+      ]
+    },
+
+    {
+      "id": "cmp3",
+      "title": "Comparison 3 / 3",
+      "subtitle": "Please tell the researcher when you are ready to start the third comparison.",
+      "questions": [
+        {
+          "id": "cmp3_timer",
+          "type": "timer",
+          "prompt": "Exposure timer (Mode 1 → Mode 2)",
+          "help": "When you are ready, press Start. You will experience two consecutive 2-minute exposures. After the timer finishes, answer the questions below.",
+          "required": true,
+          "phases": [
+            { "label": "Mode 1", "seconds": 120 },
+            { "label": "Mode 2", "seconds": 120 }
+          ]
+        },
+        {
+          "id": "cmp3_preference",
+          "type": "likert",
+          "prompt": "Which exposure matched your comfort expectations better?",
+          "required": true,
+          "points": 3,
+          "labels": ["First one", "Second one", "No difference / I don't know"],
+          "values": ["First one", "Second one", "No difference / I don't know"]
+        },
+        {
+          "id": "cmp3_reason",
+          "type": "text",
+          "prompt": "Briefly explain why you chose the above answer.",
+          "required": false,
+          "multiline": true,
+          "placeholder": "Optional (brief)"
+        }
+      ]
+    }
+  ]
+}
